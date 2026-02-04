@@ -27,7 +27,7 @@ export default function Page() {
       });
 
       setMsg(res.data.message || "Login successful");
-      router.push("/"); // ya /dashboard
+      router.push("/dashboard"); // ya /dashboard
     } catch (err: any) {
       setMsg(err.response?.data?.error || "Login failed");
     } finally {
