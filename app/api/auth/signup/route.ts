@@ -40,5 +40,11 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ message: "Signup successful", user });
+   // 3️⃣ 🔥 IMPORTANT: force logout after signup
+  await supabase.auth.signOut();
+
+  return NextResponse.json({
+    message: "Signup successful. Please login.",
+  });
 }
+

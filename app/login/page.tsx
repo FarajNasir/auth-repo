@@ -4,19 +4,17 @@ import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState<string>("");
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setMsg("");
 
     try {
       setLoading(true);
@@ -26,10 +24,10 @@ export default function Page() {
         password,
       });
 
-      setMsg(res.data.message || "Login successful");
-      router.push("/dashboard"); // ya /dashboard
+      toast.success(res.data.message || "Login successful 🚀");
+      router.push("/dashboard");
     } catch (err: any) {
-      setMsg(err.response?.data?.error || "Login failed");
+      toast.error(err.response?.data?.error || "Login failed ❌");
     } finally {
       setLoading(false);
     }
@@ -52,8 +50,7 @@ export default function Page() {
             <label className="text-sm text-white/70">Email</label>
             <input
               type="email"
-              placeholder="Enter your email"
-              className="mt-1 w-full rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/20"
+              className="mt-1 w-full rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-white"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -64,24 +61,17 @@ export default function Page() {
             <label className="text-sm text-white/70">Password</label>
             <input
               type="password"
-              placeholder="Enter your password"
-              className="mt-1 w-full rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-white/20"
+              className="mt-1 w-full rounded-xl bg-white/10 border border-white/10 px-4 py-3 text-white"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          {msg && (
-            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/80">
-              {msg}
-            </div>
-          )}
-
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-white text-slate-900 font-semibold py-3 transition hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="w-full rounded-xl bg-white text-slate-900 font-semibold py-3 disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -90,10 +80,7 @@ export default function Page() {
         <div className="mt-6 text-center">
           <p className="text-sm text-white/60">
             Don&apos;t have an account?{" "}
-            <Link
-              href="/signup"
-              className="text-white font-semibold hover:underline"
-            >
+            <Link href="/signup" className="text-white font-semibold hover:underline">
               Signup
             </Link>
           </p>

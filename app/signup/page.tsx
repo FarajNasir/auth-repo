@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const router = useRouter();
@@ -15,27 +16,35 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string>("");
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setMsg("");
 
-    try {
-      setLoading(true);
 
-      const res = await axios.post("/api/auth/signup", {
-        name,
-        email,
-        password,
-      });
+const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  setMsg("");
 
-      setMsg(res.data.message);
-      router.push("/login");
-    } catch (err: any) {
-      setMsg(err.response?.data?.error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    setLoading(true);
+
+    const res = await axios.post("/api/auth/signup", {
+      name,
+      email,
+      password,
+    });
+
+    toast.success(res.data.message || "Signup successful");
+
+    router.push("/login");
+  } catch (err: any) {
+    const errorMsg =
+      err.response?.data?.error || "Signup failed";
+
+    toast.error(errorMsg);
+    setMsg(errorMsg);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4">
